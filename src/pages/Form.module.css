@@ -116,3 +116,18 @@ input:focus {
 }
 
 
+.error {
+  background-color: #fee2e2;
+  color: #dc2626;
+  padding: 12px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  text-align: center;
+  font-family: "Vazirmatn", sans-serif;
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
