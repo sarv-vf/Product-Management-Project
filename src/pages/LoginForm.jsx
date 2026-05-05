@@ -4,7 +4,7 @@ import logo from "../assets/Union.svg";
 import api from "../services/config";
 
 import "@fontsource/vazirmatn";
-import styles from "./LoginPage.module.css";
+import styles from "./Form.module.css";
 
 function LoginForm() {
   const [username, setUsername] = useState("");
