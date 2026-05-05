@@ -1,18 +1,61 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import logo from "../assets/Union.svg";
+import { Link, useNavigate } from "react-router-dom";
+import { useTitle } from "../helper/helper";
+import api from "../services/config";
 
+import logo from "../assets/Union.svg";
 import "@fontsource/vazirmatn";
 import styles from "./Form.module.css";
 
 function RegisterForm() {
+  const navigate = useNavigate();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
-    console.log("ورود:", { username, password });
+    setError("");
+
+    if (!username || !password) {
+      setError("لطفا نام کاربری و رمز عبور را وارد کنید");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError("رمز عبور و تکران آن مطابقت ندارد");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const registerResponse = await api.post("/auth/register", {
+        username: username,
+        password: password,
+      });
+
+      console.log("ثبت نام موفق:", registerResponse);
+
+      navigate("/product-list");
+    } catch (err) {
+      console.error("خطا در ثبت نام:", err);
+
+      if (err.response?.status === 409) {
+        setError("این نام کاربری قبلاً ثبت شده است");
+      } else if (err.response?.status === 400) {
+        setError("اطلاعات وارد شده صحیح نیست");
+      } else {
+        setError("خطا در ارتباط با سرور. لطفاً دوباره تلاش کنید");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
+
+  useTitle("Register Form");
 
   return (
     <div className={styles.container}>
@@ -21,23 +64,30 @@ function RegisterForm() {
         <img src={logo} alt="logo" className={styles.logo} />
         <h1 className={styles.formTitle}>فرم ثبت نام</h1>
 
-        <form onSubmit={submitHandler}>
+        {error && <div className={styles.error}>{error}</div>}
+
+        <form>
           <input
             type="text"
             placeholder="نام کاربری"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
-          <input type="password" placeholder="رمز عبور" />
           <input
             type="password"
-            placeholder="تکرار رمز عبور"
+            placeholder="رمز عبور"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+          <input
+            type="password"
+            placeholder="تکرار رمز عبور"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          />
           <Link to="/product-list">
-            <button type="submit" className={styles.button}>
-             ثبت نام
+            <button className={styles.button} onClick={submitHandler}>
+              {loading ? "در حال ثبت نام..." : "ثبت نام"}
             </button>
           </Link>
         </form>
