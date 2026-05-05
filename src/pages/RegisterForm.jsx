@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTitle } from "../helper/helper";
+import { toast, Toaster } from "react-hot-toast";
 import api from "../services/config";
 
 import logo from "../assets/Union.svg";
@@ -13,42 +14,39 @@ function RegisterForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    setError("");
 
     if (!username || !password) {
-      setError("لطفا نام کاربری و رمز عبور را وارد کنید");
+      toast.error("لطفا نام کاربری و رمز عبور را وارد کنید");
       return;
     }
 
     if (password !== confirmPassword) {
-      setError("رمز عبور و تکران آن مطابقت ندارد");
+      toast.error("رمز عبور و تکرار آن مطابقت ندارند");
       return;
     }
 
     setLoading(true);
     try {
-      const registerResponse = await api.post("/auth/register", {
+       await api.post("/auth/register", {
         username: username,
         password: password,
       });
 
-      console.log("ثبت نام موفق:", registerResponse);
-
       navigate("/product-list");
     } catch (err) {
-      console.error("خطا در ثبت نام:", err);
 
       if (err.response?.status === 409) {
-        setError("این نام کاربری قبلاً ثبت شده است");
+        toast.error("این نام کاربری قبلاً ثبت شده است");
       } else if (err.response?.status === 400) {
-        setError("اطلاعات وارد شده صحیح نیست");
+        toast.error(
+          err.response?.data?.message || "اطلاعات وارد شده صحیح نیست",
+        );
       } else {
-        setError("خطا در ارتباط با سرور. لطفاً دوباره تلاش کنید");
+        toast.error("خطا در ارتباط با سرور. لطفاً دوباره تلاش کنید");
       }
     } finally {
       setLoading(false);
@@ -59,12 +57,11 @@ function RegisterForm() {
 
   return (
     <div className={styles.container}>
+      <Toaster position="top-center" reverseOrder={false} />
       <h1 className={styles.bootCamp}>بوت کمپ بوتو استارت</h1>
       <div className={styles.login}>
         <img src={logo} alt="logo" className={styles.logo} />
         <h1 className={styles.formTitle}>فرم ثبت نام</h1>
-
-        {error && <div className={styles.error}>{error}</div>}
 
         <form>
           <input
