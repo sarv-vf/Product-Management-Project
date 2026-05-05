@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTitle } from "../helper/helper";
 import { toast, Toaster } from "react-hot-toast";
@@ -14,7 +14,7 @@ function RegisterForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+  const input = useRef(null);
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -29,29 +29,36 @@ function RegisterForm() {
       return;
     }
 
-    setLoading(true);
     try {
-       await api.post("/auth/register", {
+      await api.post("/auth/register", {
         username: username,
         password: password,
       });
 
-      navigate("/product-list");
-    } catch (err) {
+      toast.success("ثبت نام با موفقیت انجام شد!");
 
+      setTimeout(() => {
+        navigate("/login");
+      }, 1000);
+      
+    } catch (err) {
       if (err.response?.status === 409) {
         toast.error("این نام کاربری قبلاً ثبت شده است");
       } else if (err.response?.status === 400) {
         toast.error(
           err.response?.data?.message || "اطلاعات وارد شده صحیح نیست",
         );
-      } else {
+      } else if (err.code === "ERR_NETWORK") {
         toast.error("خطا در ارتباط با سرور. لطفاً دوباره تلاش کنید");
+      } else {
+        toast.error("خطا در ثبت نام. لطفاً دوباره تلاش کنید");
       }
-    } finally {
-      setLoading(false);
     }
   };
+
+  useEffect(() => {
+    input.current.focus();
+  }, []);
 
   useTitle("Register Form");
 
@@ -63,12 +70,13 @@ function RegisterForm() {
         <img src={logo} alt="logo" className={styles.logo} />
         <h1 className={styles.formTitle}>فرم ثبت نام</h1>
 
-        <form>
+        <form onSubmit={submitHandler}>
           <input
             type="text"
             placeholder="نام کاربری"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            ref={input}
           />
           <input
             type="password"
@@ -82,11 +90,10 @@ function RegisterForm() {
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
-          <Link to="/product-list">
-            <button className={styles.button} onClick={submitHandler}>
-              {loading ? "در حال ثبت نام..." : "ثبت نام"}
-            </button>
-          </Link>
+
+          <button type="submit" className={styles.button}>
+            ثبت نام
+          </button>
         </form>
 
         <Link className={styles.link} to="/login">
