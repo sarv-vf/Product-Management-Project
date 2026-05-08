@@ -6,29 +6,32 @@ import Search from "../components/modules/Search";
 import Pagination from "../components/modules/Pagination";
 import ProductsTable from "../components/modules/ProductsTable";
 
-import styles from "./ProductListPage.module.css"
+import styles from "./ProductListPage.module.css";
 
 function ProductListPage() {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [pagination, setPagination] = useState({});
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
     const fetchProducts = async () => {
       setIsLoading(true);
       try {
-        const response = await api.get("/products");
-        // console.log(response)
+        const response = await api.get(
+          `/products?page=${currentPage}&limit=10`,
+        );
+        console.log(response);
         setProducts(response.data);
+        setTotalPages(response.totalPages || 1);
       } catch (error) {
         toast.error("خطا در دریافت محصولات");
+      } finally {
         setIsLoading(false);
-      }finally {
-        setIsLoading(false); 
       }
     };
     fetchProducts();
-  }, []);
+  }, [currentPage]);
 
   const deleteHandler = async (id) => {
     if (window.confirm("آیا از حذف این محصول اطمینان دارید؟")) {
@@ -47,6 +50,11 @@ function ProductListPage() {
     toast.success(`ویرایش ${product.name}`);
   };
 
+  const pageChangeHandler = (page) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <div className={styles.pageContainer}>
       <Toaster position="top-center" reverseOrder={false} />
@@ -63,7 +71,11 @@ function ProductListPage() {
           onDelete={deleteHandler}
         />
       </div>
-      <Pagination />
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={pageChangeHandler}
+      />
     </div>
   );
 }
