@@ -37,3 +37,30 @@ function ProductsTable({ products, isLoading, onEdit, onDelete }) {
 
 export default ProductsTable;
 
+const TableRow = ({ product, onEdit, onDelete }) => {
+  const { id, name, quantity, price } = product;
+  return (
+    <tr>
+      <td className={styles.tdName}>{name}</td>
+      <td className={styles.tdStock}>{quantity}</td>
+      <td className={styles.tdPrice}>{price?.toLocaleString() || price}</td>
+      <td className={styles.tdId}>{id}</td>
+      <td className={styles.tdActions}>
+        <button
+          onClick={() => onEdit(product)}
+          className={`${styles.action} ${styles.edit}`}
+          title="ویرایش"
+        >
+          <FaEdit />
+        </button>
+        <button
+          onClick={() => onDelete(id)}
+          className={`${styles.action} ${styles.delete}`}
+          title="حذف"
+        >
+          <FaTrashAlt />
+        </button>
+      </td>
+    </tr>
+  );
+};
