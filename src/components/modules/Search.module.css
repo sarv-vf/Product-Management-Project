@@ -1,0 +1,150 @@
+.searchContainer {
+  width: 100%;
+  max-width: 1300px;
+  margin-bottom: 30px;
+  position: relative;
+}
+
+/* خط جداکننده عمودی */
+.searchContainer::after {
+  content: "";
+  position: absolute;
+  left: 160px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 52px;
+  background-color: #e4e4e4;
+  z-index: 2;
+}
+
+.searchWrapper {
+  width: 100%;
+}
+
+.searchForm {
+  position: relative;
+  width: 100%;
+}
+
+.searchInput {
+  width: 100%;
+  height: 68px;
+  padding: 0 60px 0 280px;
+  background: #ffffff;
+  border: 1px solid #e4e4e4;
+  border-radius: 16px;
+  font-family: "Vazirmatn", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #282828;
+  text-align: right;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.searchInput::placeholder {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.searchInput:focus {
+  border-color: #55a3f0;
+  box-shadow: 0 0 0 2px rgba(85, 163, 240, 0.1);
+}
+
+/* آیکون جستجو - سمت راست */
+.searchIcon {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  display: block;
+}
+
+/* بخش اطلاعات کاربر - سمت چپ */
+.userInfo {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  direction: ltr;
+}
+
+/* عکس کاربر */
+.userAvatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background-image: url("../../assets/manager-photo.jpg");
+  background-size: cover;
+  background-position: center;
+  border: 1px solid rgba(228, 228, 228, 0.5);
+  order: 1;
+}
+
+/* متن کاربر */
+.userText {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+/* اسم کاربر */
+.userName {
+  font-family: "Vazirmatn", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #282828;
+  white-space: nowrap;
+}
+
+/* نقش کاربر */
+.userRole {
+  font-family: "Vazirmatn", sans-serif;
+  font-size: 12px;
+  font-weight: 300;
+  color: #282828;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .searchInput {
+    height: 50px;
+    padding: 0 45px 0 200px;
+    font-size: 14px;
+  }
+
+  .searchIcon {
+    width: 18px;
+    height: 18px;
+    right: 15px;
+  }
+
+  .userAvatar {
+    width: 34px;
+    height: 34px;
+  }
+
+  .userName {
+    font-size: 12px;
+  }
+
+  .userRole {
+    font-size: 10px;
+  }
+
+  .searchContainer::after {
+    left: 180px;
+    height: 40px;
+  }
+  
+  .userInfo {
+    left: 15px;
+    gap: 8px;
+  }
+}
