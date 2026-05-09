@@ -1,0 +1,169 @@
+@font-face {
+  font-family: "Vazirmatn";
+  src: url("../../assets/fonts/vazirmatn/Vazirmatn-Regular.ttf")
+    format("truetype");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "Vazirmatn";
+  src: url("../../assets/fonts/vazirmatn/Vazirmatn-SemiBold.ttf")
+    format("truetype");
+  font-weight: 600;
+}
+
+.container {
+  width: 100%;
+  align-items: center;
+  min-height: 500px;
+}
+
+.table {
+  width: 100%;
+  min-width: 900px;
+  border-collapse: collapse;
+  border-spacing: 0;
+  direction: rtl;
+  font-family: "Vazirmatn", sans-serif;
+}
+
+.table thead tr {
+  background: #f2f2f2;
+  height: 60px;
+}
+
+.table th {
+  padding: 20px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #282828;
+  text-align: right;
+  vertical-align: middle;
+}
+
+.thName {
+  width: 30%;
+}
+
+.thStock {
+  width: 15%;
+}
+
+.thPrice {
+  width: 20%;
+  text-align: left;
+  direction: ltr;
+}
+
+.thId {
+  width: 30%;
+}
+
+.thActions {
+  width: 5%;
+  text-align: center;
+}
+
+.table td {
+  padding: 18px 16px;
+  font-size: 13px;
+  font-weight: 400;
+  color: #282828;
+  text-align: right;
+  border-bottom: 1px solid #f2f2f2;
+  vertical-align: middle;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.tdName {
+  font-weight: 500;
+}
+
+.tdId {
+  font-family: monospace;
+  font-size: 12px;
+  color: #666;
+}
+
+.tdActions {
+  text-align: center;
+  white-space: nowrap;
+}
+
+.table tbody tr {
+  height: 58px;
+}
+
+.icon {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+.action {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  margin: 0 2px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action:hover {
+  transform: scale(1.05);
+}
+
+.edit:hover {
+  background-color: rgba(74, 222, 128, 0.1);
+}
+
+.delete:hover {
+  background-color: rgba(244, 63, 94, 0.1);
+}
+
+.emptyWrapper {
+  width: 100%;
+  min-width: 900px;
+  background: #ffffff;
+}
+
+.emptyMessage {
+  text-align: center;
+  padding: 80px 20px;
+  font-family: "Vazirmatn", sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.emptyMessage  {
+  font-size: 18px;
+  font-weight: 500;
+  color: #999;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .container {
+    overflow-x: auto;
+  }
+  
+  .table {
+    min-width: 600px;
+  }
+  
+  .table th,
+  .table td {
+    padding: 12px 12px;
+    font-size: 12px;
+  }
+}
