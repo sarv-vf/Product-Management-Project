@@ -5,6 +5,7 @@ import api from "../services/config";
 import Search from "../components/modules/Search";
 import Pagination from "../components/modules/Pagination";
 import ProductsTable from "../components/modules/ProductsTable";
+import { filterProductsBySearch } from "../helper/helper";
 
 import styles from "./ProductListPage.module.css";
 
@@ -13,14 +14,19 @@ function ProductListPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(3);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [displayProducts, setDisplayProducts] = useState([]);
 
   useEffect(() => {
     const fetchProducts = async () => {
       setIsLoading(true);
       try {
-        const response = await api.get(`/products?page=${currentPage}&limit=10`);
-        console.log("پاسخ", response.data);
+        const response = await api.get(
+          `/products?page=${currentPage}&limit=10`,
+        );
+        // console.log("پاسخ", response.data);
         setProducts(response.data || []);
+        setDisplayProducts(response.data || []);
         if (response.totalPages) {
           setTotalPages(response.totalPages);
         } else if (response.data.length < 4 && currentPage === 1) {
@@ -31,12 +37,18 @@ function ProductListPage() {
       } catch (error) {
         toast.error("خطا در دریافت محصولات");
         setProducts([]);
+        setDisplayProducts([]);
       } finally {
         setIsLoading(false);
       }
     };
     fetchProducts();
   }, [currentPage]);
+
+  useEffect(() => {
+    const filtered = filterProductsBySearch(products, searchTerm);
+    setDisplayProducts(filtered);
+  }, [searchTerm, products]);
 
   const deleteHandler = async (id) => {
     if (window.confirm("آیا از حذف این محصول اطمینان دارید؟")) {
@@ -59,25 +71,32 @@ function ProductListPage() {
     setCurrentPage(page);
   };
 
+  const searchHandler = (term) => {
+    // console.log("جستجو:", term);
+    setSearchTerm(term);
+  };
+
   return (
     <div className={styles.pageContainer}>
       <Toaster position="top-center" reverseOrder={false} />
-      <Search />
+
+      <Search onSearch={searchHandler} />
+
       <div className={styles.header}>
         <h1 className={styles.title}>مدیریت کالا</h1>
       </div>
 
       <div className={styles.tableWrapper}>
         <ProductsTable
-          products={products}
+          products={displayProducts}
           isLoading={isLoading}
           onEdit={editHandler}
           onDelete={deleteHandler}
         />
       </div>
+
       <Pagination
         currentPage={currentPage}
-        totalPages={totalPages}
         onPageChange={pageChangeHandler}
       />
     </div>
