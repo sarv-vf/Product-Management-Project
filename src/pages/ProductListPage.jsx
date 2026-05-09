@@ -12,20 +12,25 @@ function ProductListPage() {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const [totalPages, setTotalPages] = useState(3);
 
   useEffect(() => {
     const fetchProducts = async () => {
       setIsLoading(true);
       try {
-        const response = await api.get(
-          `/products?page=${currentPage}&limit=10`,
-        );
-        console.log(response);
-        setProducts(response.data);
-        setTotalPages(response.totalPages || 1);
+        const response = await api.get(`/products?page=${currentPage}&limit=10`);
+        console.log("پاسخ", response.data);
+        setProducts(response.data || []);
+        if (response.totalPages) {
+          setTotalPages(response.totalPages);
+        } else if (response.data.length < 4 && currentPage === 1) {
+          setTotalPages(1);
+        } else {
+          setTotalPages(3);
+        }
       } catch (error) {
         toast.error("خطا در دریافت محصولات");
+        setProducts([]);
       } finally {
         setIsLoading(false);
       }
@@ -52,7 +57,6 @@ function ProductListPage() {
 
   const pageChangeHandler = (page) => {
     setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
