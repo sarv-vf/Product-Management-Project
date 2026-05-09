@@ -5,7 +5,6 @@
   position: relative;
 }
 
-/* خط جداکننده عمودی */
 .searchContainer::after {
   content: "";
   position: absolute;
@@ -52,7 +51,6 @@
   box-shadow: 0 0 0 2px rgba(85, 163, 240, 0.1);
 }
 
-/* آیکون جستجو - سمت راست */
 .searchIcon {
   position: absolute;
   right: 20px;
@@ -63,7 +61,6 @@
   display: block;
 }
 
-/* بخش اطلاعات کاربر - سمت چپ */
 .userInfo {
   position: absolute;
   left: 20px;
@@ -75,7 +72,6 @@
   direction: ltr;
 }
 
-/* عکس کاربر */
 .userAvatar {
   width: 46px;
   height: 46px;
@@ -87,14 +83,12 @@
   order: 1;
 }
 
-/* متن کاربر */
 .userText {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
 }
 
-/* اسم کاربر */
 .userName {
   font-family: "Vazirmatn", sans-serif;
   font-size: 14px;
@@ -103,7 +97,6 @@
   white-space: nowrap;
 }
 
-/* نقش کاربر */
 .userRole {
   font-family: "Vazirmatn", sans-serif;
   font-size: 12px;

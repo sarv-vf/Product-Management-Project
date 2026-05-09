@@ -6,6 +6,19 @@ const useTitle = (title) => {
   }, []);
 };
 
+ const filterProductsBySearch = (products, searchTerm) => {
+  if (!searchTerm || searchTerm.trim() === "") {
+    return products;
+  }
+  
+  const lowerCaseSearch = searchTerm.toLowerCase().trim();
+  
+  return products.filter((product) => {
+    return (
+      product.name?.toLowerCase().includes(lowerCaseSearch) ||
+      product.id?.toLowerCase().includes(lowerCaseSearch)
+    );
+  });
+};
 
-
-export {useTitle }
+export { useTitle, filterProductsBySearch, highlightText };
