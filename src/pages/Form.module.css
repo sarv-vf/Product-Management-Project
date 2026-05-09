@@ -68,7 +68,7 @@ body {
   text-align: center;
 }
 
-input {
+.formInput {
   width: 100%;
   height: 53px;
   outline: none;
@@ -84,7 +84,7 @@ input {
   transition: all 0.2s;
 }
 
-input:focus {
+.formInput:focus {
   border: 1px solid #55a3f0;
   background-color: #ffffff;
   box-shadow: 0 0 0 2px rgba(85, 163, 240, 0.1);
@@ -116,18 +116,13 @@ input:focus {
 }
 
 
-.error {
+/* .error {
   background-color: #fee2e2;
   color: #dc2626;
-  padding: 12px;
+  padding: 10px;
   border-radius: 12px;
-  margin-bottom: 20px;
-  font-size: 14px;
+  margin-bottom: 10px;
+  font-size: 10px;
   text-align: center;
   font-family: "Vazirmatn", sans-serif;
-}
-
-.button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
+} */

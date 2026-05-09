@@ -40,7 +40,6 @@ function RegisterForm() {
       setTimeout(() => {
         navigate("/login");
       }, 1000);
-      
     } catch (err) {
       if (err.response?.status === 409) {
         toast.error("این نام کاربری قبلاً ثبت شده است");
@@ -77,18 +76,21 @@ function RegisterForm() {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             ref={input}
+            className={styles.formInput}
           />
           <input
             type="password"
             placeholder="رمز عبور"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            className={styles.formInput}
           />
           <input
             type="password"
             placeholder="تکرار رمز عبور"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
+            className={styles.formInput}
           />
 
           <button type="submit" className={styles.button}>

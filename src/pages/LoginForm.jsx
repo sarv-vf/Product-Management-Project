@@ -78,12 +78,14 @@ function LoginForm() {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             ref={input}
+            className={styles.formInput}
           />
           <input
             type="password"
             placeholder="رمز عبور"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            className={styles.formInput}
           />
 
           <button type="submit" className={styles.button}>
