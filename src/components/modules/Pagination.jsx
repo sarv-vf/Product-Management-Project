@@ -1,7 +1,6 @@
 import styles from "./Pagination.module.css";
 
-function Pagination({ currentPage,totalPages, onPageChange }) {
-  console.log("Pagination props:", { currentPage , totalPages });
+function Pagination({ currentPage, onPageChange }) {
 
   return (
     <div className={styles.pagination}>
