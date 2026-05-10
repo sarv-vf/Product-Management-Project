@@ -5,7 +5,8 @@ import api from "../services/config";
 import Search from "../components/modules/Search";
 import Pagination from "../components/modules/Pagination";
 import ProductsTable from "../components/modules/ProductsTable";
-import { filterProductsBySearch } from "../helper/helper";
+import AddModal from "../components/modals/AddModal";
+import { filterProductsBySearch, useTitle } from "../helper/helper";
 
 import styles from "./ProductListPage.module.css";
 
@@ -16,6 +17,8 @@ function ProductListPage() {
   const [totalPages, setTotalPages] = useState(3);
   const [searchTerm, setSearchTerm] = useState("");
   const [displayProducts, setDisplayProducts] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -24,7 +27,6 @@ function ProductListPage() {
         const response = await api.get(
           `/products?page=${currentPage}&limit=10`,
         );
-        // console.log("پاسخ", response.data);
         setProducts(response.data || []);
         setDisplayProducts(response.data || []);
         if (response.totalPages) {
@@ -72,18 +74,59 @@ function ProductListPage() {
   };
 
   const searchHandler = (term) => {
-    // console.log("جستجو:", term);
     setSearchTerm(term);
   };
 
+  const addProductHandler = async (newProduct) => {
+    setIsAdding(true);
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        toast.error("لطفاً ابتدا وارد شوید");
+        window.location.href = "/login";
+        return;
+      }
+      const response = await api.post("/products", newProduct, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+      });
+      setProducts([response, ...products]);
+      toast.success("محصول با موفقیت اضافه شد");
+      setIsModalOpen(false);
+    } catch (error) {
+      console.log("error: ", error);
+      toast.error("خطا در افزودن محصول");
+    } finally {
+      setIsAdding(false);
+    }
+  };
+
+  useTitle("Products List");
   return (
     <div className={styles.pageContainer}>
       <Toaster position="top-center" reverseOrder={false} />
-
+      <AddModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onAdd={addProductHandler}
+        isLoading={isAdding}
+      />
       <Search onSearch={searchHandler} />
 
       <div className={styles.header}>
         <h1 className={styles.title}>مدیریت کالا</h1>
+        <div className={styles.addButtonWrapper}>
+          <button
+            className={styles.addButton}
+            onClick={() => {
+              setIsModalOpen(true);
+            }}
+          >
+            افزودن محصول
+          </button>
+        </div>
       </div>
 
       <div className={styles.tableWrapper}>
@@ -95,10 +138,7 @@ function ProductListPage() {
         />
       </div>
 
-      <Pagination
-        currentPage={currentPage}
-        onPageChange={pageChangeHandler}
-      />
+      <Pagination currentPage={currentPage} onPageChange={pageChangeHandler} />
     </div>
   );
 }
