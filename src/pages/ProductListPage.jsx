@@ -168,12 +168,20 @@ function ProductListPage() {
   return (
     <div className={styles.pageContainer}>
       <Toaster position="top-center" reverseOrder={false} />
+
       <AddModal
         isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
+        onClose={() => {
+          setIsAddModalOpen(false);
+          setProductToEdit(null);
+          setIsEditing(false);
+        }}
         onAdd={addProductHandler}
-        isLoading={isAdding}
+        onEdit={editProductHandler}
+        isLoading={isAdding || isEditing}
+        productToEdit={productToEdit}
       />
+
       <DeleteModal
         isOpen={deleteModalOpen}
         onClose={() => {
