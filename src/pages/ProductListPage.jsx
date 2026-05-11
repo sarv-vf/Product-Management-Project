@@ -20,7 +20,6 @@ function ProductListPage() {
   const [displayProducts, setDisplayProducts] = useState([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
   const [productToEdit, setProductToEdit] = useState(null);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -94,12 +93,11 @@ function ProductListPage() {
 
   const editHandler = (product) => {
     setProductToEdit(product);
-    setIsEditing(true);
     setIsAddModalOpen(true);
   };
 
   const editProductHandler = async (id, updateProduct) => {
-    setIsEditing(true);
+    setIsAdding(true);
     try {
       const token = localStorage.getItem("token");
       if (!token) {
@@ -108,27 +106,22 @@ function ProductListPage() {
         return;
       }
 
-      const response = await api.put(`/products/${id}`, updateProduct, {
+      await api.put(`/products/${id}`, updateProduct, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      const updateProducts = products.map((p) => {
-        if (p.id === id) {
-          return { ...p, ...updateProduct };
-        } else {
-          return p;
-        }
-      });
-      setProducts(updateProduct);
+      const updatedProducts = products.map((p) =>
+        p.id === id ? { ...p, ...updateProduct } : p,
+      );
+      setProducts(updatedProducts);
       toast.success("محصول با موفقیت ویرایش شد");
       setIsAddModalOpen(false);
       setProductToEdit(null);
-      setIsEditing(false);
     } catch (error) {
       toast.error("خطا در ویرایش محصول");
     } finally {
-      setIsEditing(false);
+      setIsAdding(false);
     }
   };
 
@@ -174,11 +167,10 @@ function ProductListPage() {
         onClose={() => {
           setIsAddModalOpen(false);
           setProductToEdit(null);
-          setIsEditing(false);
         }}
         onAdd={addProductHandler}
         onEdit={editProductHandler}
-        isLoading={isAdding || isEditing}
+        isLoading={isAdding}
         productToEdit={productToEdit}
       />
 
@@ -202,6 +194,7 @@ function ProductListPage() {
             className={styles.addButton}
             onClick={() => {
               setIsAddModalOpen(true);
+              setProductToEdit(null);
             }}
           >
             افزودن محصول
