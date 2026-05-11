@@ -6,10 +6,10 @@ import Search from "../components/modules/Search";
 import Pagination from "../components/modules/Pagination";
 import ProductsTable from "../components/modules/ProductsTable";
 import AddModal from "../components/modals/AddModal";
+import DeleteModal from "../components/modals/DeleteModal";
 import { filterProductsBySearch, useTitle } from "../helper/helper";
 
 import styles from "./ProductListPage.module.css";
-import DeleteModal from "../components/modals/DeleteModal";
 
 function ProductListPage() {
   const [products, setProducts] = useState([]);
@@ -20,6 +20,8 @@ function ProductListPage() {
   const [displayProducts, setDisplayProducts] = useState([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [productToEdit, setProductToEdit] = useState(null);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -56,11 +58,6 @@ function ProductListPage() {
     setDisplayProducts(filtered);
   }, [searchTerm, products]);
 
-  const editHandler = (product) => {
-    console.log("ویرایش:", product);
-    toast.success(`ویرایش ${product.name}`);
-  };
-
   const pageChangeHandler = (page) => {
     setCurrentPage(page);
   };
@@ -92,6 +89,46 @@ function ProductListPage() {
       toast.error("خطا در افزودن محصول");
     } finally {
       setIsAdding(false);
+    }
+  };
+
+  const editHandler = (product) => {
+    setProductToEdit(product);
+    setIsEditing(true);
+    setIsAddModalOpen(true);
+  };
+
+  const editProductHandler = async (id, updateProduct) => {
+    setIsEditing(true);
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        toast.error("لطفاً ابتدا وارد شوید");
+        window.location.href = "/login";
+        return;
+      }
+
+      const response = await api.put(`/products/${id}`, updateProduct, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const updateProducts = products.map((p) => {
+        if (p.id === id) {
+          return { ...p, ...updateProduct };
+        } else {
+          return p;
+        }
+      });
+      setProducts(updateProduct);
+      toast.success("محصول با موفقیت ویرایش شد");
+      setIsAddModalOpen(false);
+      setProductToEdit(null);
+      setIsEditing(false);
+    } catch (error) {
+      toast.error("خطا در ویرایش محصول");
+    } finally {
+      setIsEditing(false);
     }
   };
 
