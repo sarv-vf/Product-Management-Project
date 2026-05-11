@@ -9,6 +9,7 @@ import AddModal from "../components/modals/AddModal";
 import { filterProductsBySearch, useTitle } from "../helper/helper";
 
 import styles from "./ProductListPage.module.css";
+import DeleteModal from "../components/modals/DeleteModal";
 
 function ProductListPage() {
   const [products, setProducts] = useState([]);
@@ -17,8 +18,11 @@ function ProductListPage() {
   const [totalPages, setTotalPages] = useState(3);
   const [searchTerm, setSearchTerm] = useState("");
   const [displayProducts, setDisplayProducts] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -52,18 +56,6 @@ function ProductListPage() {
     setDisplayProducts(filtered);
   }, [searchTerm, products]);
 
-  const deleteHandler = async (id) => {
-    if (window.confirm("آیا از حذف این محصول اطمینان دارید؟")) {
-      try {
-        await api.delete(`/products/${id}`);
-        setProducts(products.filter((p) => p.id !== id));
-        toast.success("محصول با موفقیت حذف شد");
-      } catch (error) {
-        toast.error("خطا در حذف محصول");
-      }
-    }
-  };
-
   const editHandler = (product) => {
     console.log("ویرایش:", product);
     toast.success(`ویرایش ${product.name}`);
@@ -94,7 +86,7 @@ function ProductListPage() {
       });
       setProducts([response, ...products]);
       toast.success("محصول با موفقیت اضافه شد");
-      setIsModalOpen(false);
+      setIsAddModalOpen(false);
     } catch (error) {
       console.log("error: ", error);
       toast.error("خطا در افزودن محصول");
@@ -103,16 +95,59 @@ function ProductListPage() {
     }
   };
 
+  const deleteHandler = async (product) => {
+    setSelectedProduct(product);
+    setDeleteModalOpen(true);
+  };
+  const confirmDelete = async () => {
+    if (!selectedProduct) return;
+    setIsDeleting(true);
+
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        toast.error("لطفاً ابتدا وارد شوید");
+        window.location.href = "/login";
+        return;
+      }
+
+      await api.delete(`/products/${selectedProduct.id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setProducts(products.filter((p) => p.id !== selectedProduct.id));
+      toast.success("محصول با موفقیت حذف شد");
+      setDeleteModalOpen(false);
+      setSelectedProduct(null);
+    } catch (error) {
+      toast.error("خطا در حذف محصول");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   useTitle("Products List");
   return (
     <div className={styles.pageContainer}>
       <Toaster position="top-center" reverseOrder={false} />
       <AddModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
         onAdd={addProductHandler}
         isLoading={isAdding}
       />
+      <DeleteModal
+        isOpen={deleteModalOpen}
+        onClose={() => {
+          setDeleteModalOpen(false);
+          setSelectedProduct(null);
+        }}
+        onDelete={confirmDelete}
+        productName={selectedProduct?.name}
+        isLoading={isDeleting}
+      />
+
       <Search onSearch={searchHandler} />
 
       <div className={styles.header}>
@@ -121,7 +156,7 @@ function ProductListPage() {
           <button
             className={styles.addButton}
             onClick={() => {
-              setIsModalOpen(true);
+              setIsAddModalOpen(true);
             }}
           >
             افزودن محصول
