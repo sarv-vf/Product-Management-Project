@@ -1,14 +1,34 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 import styles from "./AddModal.module.css";
 
-function AddModal({ isOpen, onClose, onAdd, isLoading }) {
+function AddModal({
+  isOpen,
+  onClose,
+  onAdd,
+  onEdit,
+  isLoading,
+  productToEdit,
+}) {
   const [productData, setProductData] = useState({
     name: "",
     quantity: "",
     price: "",
   });
+
+  useEffect(() => {
+    if (productToEdit) {
+      setProductData({
+        name: productToEdit.name || "",
+        quantity: productToEdit.quantity || "",
+        price: productToEdit.price || "",
+      });
+    } else {
+      setProductData({ name: "", quantity: "", price: "" });
+    }
+  }, [productToEdit]);
+
   if (!isOpen) return null;
 
   const changeHandler = (e) => {
@@ -23,24 +43,34 @@ function AddModal({ isOpen, onClose, onAdd, isLoading }) {
       return;
     }
 
-      console.log("داده ارسالی به API:", productData);
-    await onAdd({
+    const submitData = {
       name: productData.name,
       quantity: Number(productData.quantity),
       price: Number(productData.price),
-    });
+    };
+
+    if (productToEdit) {
+      await onEdit(productToEdit.id, submitData);
+    } else {
+      await onAdd(submitData);
+    }
+
     setProductData({ name: "", quantity: "", price: "" });
   };
 
   const closeHandler = () => {
-    setProductData({ name: "", quantity: "", price: ""});
+    setProductData({ name: "", quantity: "", price: "" });
     onClose();
   };
+
+  const isEditing = !!productToEdit;
 
   return (
     <div className={styles.overlay} onClick={closeHandler}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-        <h2 className={styles.title}>ایجاد محصول جدید</h2>
+        <h2 className={styles.title}>
+          {isEditing ? "ویرایش اطلاعات" : "ایجاد محصول جدید"}{" "}
+        </h2>
 
         <form onSubmit={submitHandler} className={styles.form}>
           <div className={styles.formGroup}>
@@ -84,13 +114,11 @@ function AddModal({ isOpen, onClose, onAdd, isLoading }) {
             >
               انصراف
             </button>
-            <button
-              type="submit"
-              className={styles.submitBtn}
-              disabled={isLoading}
-            >
-              {isLoading ? "در حال ایجاد..." : "ایجاد"}
-            </button>
+            <button type="submit" className={styles.submitBtn} disabled={isLoading}>
+               {isLoading 
+                   ? (isEditing ? "در حال ویرایش..." : "در حال ایجاد...")
+                   : (isEditing ? "ویرایش" : "ایجاد")}
+              </button>
           </div>
         </form>
       </div>
