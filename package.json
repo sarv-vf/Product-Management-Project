@@ -12,8 +12,10 @@
   "dependencies": {
     "@fontsource/vazirmatn": "^5.2.8",
     "axios": "^1.15.2",
+    "cors": "^2.4.2",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
+    "react-hot-toast": "^2.6.0",
     "react-icons": "^5.6.0",
     "react-loader-spinner": "^8.0.2",
     "react-router-dom": "^7.14.2"

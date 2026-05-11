@@ -1,6 +1,6 @@
 .pageContainer {
   width: 100%;
-  min-height: 100vh;
+  max-height: 100vh;
   padding: 50px;
   display: flex;
   flex-direction: column;
@@ -12,6 +12,8 @@
   width: 100%;
   max-width: 1300px;
   margin: 20px 0 24px 0;
+  display: flex;
+  justify-content: space-between;
 }
 
 .title {
@@ -47,6 +49,26 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
+.addButtonWrapper {
+  text-align: left;
+}
+
+.addButton {
+  background-color: #55a3f0;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: "Vazirmatn", sans-serif;
+  transition: all 0.2s;
+}
+
+.addButton:hover {
+  background-color: #4493e0;
+}
 
 
 @media (max-width: 768px) {

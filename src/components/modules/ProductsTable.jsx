@@ -67,7 +67,7 @@ const TableRow = ({ product, onEdit, onDelete }) => {
           <img src={edit} alt="editIcon" className={styles.icon} />
         </button>
         <button
-          onClick={() => onDelete(id)}
+          onClick={() => onDelete(product)}
           className={`${styles.action} ${styles.delete}`}
           title="حذف"
         >

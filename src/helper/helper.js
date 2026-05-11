@@ -21,4 +21,4 @@ const useTitle = (title) => {
   });
 };
 
-export { useTitle, filterProductsBySearch, highlightText };
+export { useTitle, filterProductsBySearch };
