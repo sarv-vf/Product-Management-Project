@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import styles from "./AddModal.module.css";
 
 function AddModal({ isOpen, onClose, onAdd, isLoading }) {
-  const [formData, setFormData] = useState({
+  const [productData, setProductData] = useState({
     name: "",
     quantity: "",
     price: "",
@@ -13,25 +13,27 @@ function AddModal({ isOpen, onClose, onAdd, isLoading }) {
 
   const changeHandler = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setProductData((prev) => ({ ...prev, [name]: value }));
   };
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.quantity || !formData.price) {
+    if (!productData.name || !productData.quantity || !productData.price) {
       toast.error("لطفاً تمام فیلدها را پر کنید");
       return;
     }
+
+      console.log("داده ارسالی به API:", productData);
     await onAdd({
-      name: formData.name,
-      quantity: Number(formData.quantity),
-      price: Number(FormData.price),
+      name: productData.name,
+      quantity: Number(productData.quantity),
+      price: Number(productData.price),
     });
-    setFormData({ name: "", quantity: "", price: "" });
+    setProductData({ name: "", quantity: "", price: "" });
   };
 
   const closeHandler = () => {
-    setFormData({ name: "", quantity: "", price: ""});
+    setProductData({ name: "", quantity: "", price: ""});
     onClose();
   };
 
@@ -46,7 +48,7 @@ function AddModal({ isOpen, onClose, onAdd, isLoading }) {
             <input
               type="text"
               name="name"
-              value={formData.name}
+              value={productData.name}
               onChange={changeHandler}
               placeholder="نام کالا"
             />
@@ -57,7 +59,7 @@ function AddModal({ isOpen, onClose, onAdd, isLoading }) {
             <input
               type="text"
               name="quantity"
-              value={formData.quantity}
+              value={productData.quantity}
               onChange={changeHandler}
               placeholder="تعداد"
             />
@@ -68,7 +70,7 @@ function AddModal({ isOpen, onClose, onAdd, isLoading }) {
             <input
               type="text"
               name="price"
-              value={formData.price}
+              value={productData.price}
               onChange={changeHandler}
               placeholder="قیمت"
             />
