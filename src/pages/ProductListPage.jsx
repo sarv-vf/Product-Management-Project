@@ -7,7 +7,11 @@ import Pagination from "../components/modules/Pagination";
 import ProductsTable from "../components/modules/ProductsTable";
 import AddModal from "../components/modals/AddModal";
 import DeleteModal from "../components/modals/DeleteModal";
-import { filterProductsBySearch, useTitle } from "../helper/helper";
+import {
+  filterProductsBySearch,
+  useResponsiveLimit,
+  useTitle,
+} from "../helper/helper";
 
 import styles from "./ProductListPage.module.css";
 
@@ -15,7 +19,7 @@ function ProductListPage() {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(3);
+  const [totalPages, setTotalPages] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [displayProducts, setDisplayProducts] = useState([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -25,21 +29,22 @@ function ProductListPage() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
+  const limit = useResponsiveLimit();
+
   useEffect(() => {
     const fetchProducts = async () => {
       setIsLoading(true);
       try {
         const response = await api.get(
-          `/products?page=${currentPage}&limit=10`,
+          `/products?page=${currentPage}&limit=${limit}`,
         );
+        console.log("پاسخ کامل API:", response);
         setProducts(response.data || []);
         setDisplayProducts(response.data || []);
         if (response.totalPages) {
           setTotalPages(response.totalPages);
-        } else if (response.data.length < 4 && currentPage === 1) {
-          setTotalPages(1);
         } else {
-          setTotalPages(3);
+          setTotalPages(Math.ceil(response.data.length /limit));
         }
       } catch (error) {
         toast.error("خطا در دریافت محصولات");
@@ -50,7 +55,11 @@ function ProductListPage() {
       }
     };
     fetchProducts();
-  }, [currentPage]);
+  }, [currentPage, limit]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [limit]);
 
   useEffect(() => {
     const filtered = filterProductsBySearch(products, searchTerm);
@@ -74,13 +83,22 @@ function ProductListPage() {
         window.location.href = "/login";
         return;
       }
-      const response = await api.post("/products", newProduct, {
+      await api.post("/products", newProduct, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
           "Content-Type": "application/json",
         },
       });
-      setProducts([response, ...products]);
+
+      const fetchResponse = await api.get(`/products?page=1&limit=${limit}`);
+      setProducts(fetchResponse.data || []);
+      setDisplayProducts(fetchResponse.data || []);
+      setCurrentPage(1);
+
+      if (fetchResponse.totalPages) {
+        setTotalPages(fetchResponse.totalPages);
+      }
+
       toast.success("محصول با موفقیت اضافه شد");
       setIsAddModalOpen(false);
     } catch (error) {
@@ -211,7 +229,11 @@ function ProductListPage() {
         />
       </div>
 
-      <Pagination currentPage={currentPage} onPageChange={pageChangeHandler} />
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={pageChangeHandler}
+      />
     </div>
   );
 }
