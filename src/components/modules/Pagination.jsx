@@ -1,29 +1,18 @@
 import styles from "./Pagination.module.css";
 
-function Pagination({ currentPage, onPageChange }) {
+function Pagination({ currentPage,totalPages, onPageChange }) {
 
-  return (
-    <div className={styles.pagination}>
-      <button
-        onClick={() => onPageChange(1)}
-        className={`${styles.pageBtn} ${currentPage === 1 ? styles.active : ""}`}
-      >
-        ۱
-      </button>
-      
-      <button
-        onClick={() => onPageChange(2)}
-        className={`${styles.pageBtn} ${currentPage === 2 ? styles.active : ""}`}
-      >
-        ۲
-      </button>
-      
-      <button
-        onClick={() => onPageChange(3)}
-        className={`${styles.pageBtn} ${currentPage === 3 ? styles.active : ""}`}
-      >
-        ۳
-      </button>
+  return (  
+      <div className={styles.pagination}>
+      {[...Array(totalPages)].map((_, index) => (
+        <button
+          key={index}
+          onClick={() => onPageChange(index + 1)}
+          className={`${styles.pageBtn} ${currentPage === index + 1 ? styles.active : ""}`}
+        >
+          {index + 1}
+        </button>
+      ))}
     </div>
   );
 }
