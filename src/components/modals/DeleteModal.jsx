@@ -20,7 +20,7 @@ function DeleteModal({ isOpen, onClose, onDelete, isLoading }) {
             className={styles.deleteBtn}
             disabled={isLoading}
           >
-            {isLoading ? "در حل حذف ..." : "حذف"}
+            {isLoading ? "در حال حذف ..." : "حذف"}
           </button>
           <button
             onClick={onClose}
