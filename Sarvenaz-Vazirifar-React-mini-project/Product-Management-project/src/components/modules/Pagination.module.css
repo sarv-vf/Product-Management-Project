@@ -1,0 +1,40 @@
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.pageBtn {
+  width: 35px;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 15px;
+  border: 2px solid rgba(141, 141, 141, 0.5);
+  background: transparent;
+  border-radius: 42px;
+  cursor: pointer;
+  font-family: 'Vazirmatn', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 25px;
+  text-align: center;
+  color: rgba(141, 141, 141, 0.5);
+  transition: all 0.2s ease;
+}
+
+.pageBtn:hover {
+  border-color: #55a3f0;
+  color: #55a3f0;
+}
+
+.pageBtn.active {
+  background: #55a3f0;
+  border: none;
+  color: #ffffff;
+  font-weight: 400;
+}

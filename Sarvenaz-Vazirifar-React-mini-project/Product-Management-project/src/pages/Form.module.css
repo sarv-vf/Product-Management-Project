@@ -1,0 +1,128 @@
+@font-face {
+  font-family: "SemiBold";
+  src: url("../assets/fonts/vazirmatn/Vazirmatn-SemiBold.ttf")
+    format("truetype");
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Kalameh";
+  src: url("../assets/fonts/kalameh/Kalameh\(FaNum\)-Medium.ttf");
+  font-weight: 700;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  font-family: "Vazirmatn", "Segoe UI", Tahoma, sans-serif;
+  direction: rtl;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #282828;
+  background-color: #ffffff;
+}
+
+.container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.bootCamp {
+  width: 200px;
+  font-family: "Kalameh";
+  font-size: 21px;
+  color: #1a1a1a;
+  text-align: center;
+  padding-bottom: 50px;
+}
+
+.login {
+  width: 420px;
+  background-color: #ffffff;
+  padding: 40px 20px 13px 20px;
+  border: 1px solid #e4e4e4;
+  border-radius: 40px;
+}
+
+.logo {
+  width: 90px;
+  height: 90px;
+  margin: 0 auto 15px auto;
+  display: block;
+}
+
+.formTitle {
+  font-size: 26px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 35px;
+  text-align: center;
+}
+
+.formInput {
+  width: 100%;
+  height: 53px;
+  outline: none;
+  border: none;
+  border-radius: 15px;
+  font-family: inherit;
+  font-weight: 400;
+  font-size: 16px;
+  text-align: right;
+  background-color: #f2f2f2;
+  padding: 22px 15px;
+  margin-bottom: 20px;
+  transition: all 0.2s;
+}
+
+.formInput:focus {
+  border: 1px solid #55a3f0;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 2px rgba(85, 163, 240, 0.1);
+}
+
+.button {
+  width: 100%;
+  height: 53px;
+  cursor: pointer;
+  border: none;
+  color: #ffffff;
+  background-color: #55a3f0;
+  border-radius: 15px;
+  font-family: "SemiBold";
+  font-size: 18px;
+  font-weight: 600;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+
+
+.link {
+  text-decoration: none;
+  color: #3a8bed;
+  font-size: 15px;
+  font-weight: 300;
+  margin-right: 10px;
+}
+
+
+/* .error {
+  background-color: #fee2e2;
+  color: #dc2626;
+  padding: 10px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  font-size: 10px;
+  text-align: center;
+  font-family: "Vazirmatn", sans-serif;
+} */
